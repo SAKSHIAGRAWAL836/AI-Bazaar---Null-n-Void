@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Marketplace Simulator</title>
+  <link rel="stylesheet" href="dash.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header>AI Marketplace Monetization Simulator</header>
+
+  <section>
+    <h2 class="section-heading">Dashboard Overview</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>Total Earnings</h3>
+        <p>$12,000</p>
+      </div>
+      <div class="card">
+        <h3>Tools Launched</h3>
+        <p>4</p>
+      </div>
+      <div class="card">
+        <h3>Users</h3>
+        <p>1350</p>
+      </div>
+      <div class="card">
+        <h3>Top Tool</h3>
+        <p>SmartChat AI</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-heading">Launch a New Tool</h2>
+    <form id="launchForm">
+      <input type="text" id="toolName" placeholder="Tool Name" required />
+      <textarea id="toolDescription" placeholder="Tool Description" required></textarea>
+      <select id="toolCategory" required>
+        <option value="">Select Category</option>
+        <option value="AI Assistant">AI Assistant</option>
+        <option value="Automation">Automation</option>
+        <option value="Analytics">Analytics</option>
+      </select>
+      <label for="priceRange" style="color:#b19cd9;">Set Price: $<span id="priceDisplay">50</span></label>
+      <input type="range" id="priceRange" min="0" max="100" value="50" />
+      <button type="submit">Launch Tool</button>
+    </form>
+  </section>
+
+  <section>
+    <h2 class="section-heading">Performance Badges</h2>
+    <div class="badges">
+      <div class="badge">Top Seller</div>
+      <div class="badge">High ROI</div>
+      <div class="badge">Fastest Growth</div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-heading">User Feedback</h2>
+    <form id="feedbackForm">
+      <textarea id="feedbackInput" placeholder="Write your feedback..." required></textarea>
+      <button type="submit">Submit Feedback</button>
+    </form>
+    <div class="chat-box" id="latestFeedback">
+      "The SmartChat AI tool saved us 20 hours of manual work per week!"
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-heading">Tool Data</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Category</th>
+          <th>Revenue</th>
+          <th>Users</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>SmartChat AI</td>
+          <td>AI Assistant</td>
+          <td>$8,000</td>
+          <td>900</td>
+        </tr>
+        <tr>
+          <td>DataCrunch</td>
+          <td>Analytics</td>
+          <td>$2,000</td>
+          <td>250</td>
+        </tr>
+        <tr>
+          <td>FlowBot</td>
+          <td>Automation</td>
+          <td>$2,000</td>
+          <td>200</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2 class="section-heading">Marketplace Simulator</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>Simulate Market Launch</h3>
+        <p>See how your tool performs in various scenarios.</p>
+        <button>Start Simulation</button>
+      </div>
+      <div class="card">
+        <h3>Revenue Estimator</h3>
+        <p>Estimate earnings based on features and category.</p>
+        <button>Estimate Now</button>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-heading">Freemium vs Premium Plans</h2>
+    <ul>
+      <li><strong>Freemium:</strong> Basic features, limited tool launches, community support.</li>
+      <li><strong>Premium:</strong> Unlimited tools, advanced analytics, priority support, monetization insights.</li>
+    </ul>
+  </section>
+
+  <script>
+    const priceRange = document.getElementById("priceRange");
+    const priceDisplay = document.getElementById("priceDisplay");
+
+    priceRange.addEventListener("input", () => {
+      priceDisplay.textContent = priceRange.value;
+    });
+
+    document.getElementById("launchForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const payload = {
+        name: document.getElementById("toolName").value,
+        description: document.getElementById("toolDescription").value,
+        category: document.getElementById("toolCategory").value,
+        price: priceRange.value
+      };
+
+      const res = await fetch("/launch", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      const result = await res.json();
+      alert(result.message);
+    });
+
+    document.getElementById("feedbackForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const feedback = document.getElementById("feedbackInput").value;
+
+      const res = await fetch("/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ feedback })
+      });
+
+      const result = await res.json();
+      alert(result.message);
+      document.getElementById("latestFeedback").textContent = `"${feedback}"`;
+    });
+  </script>
+</body>
+</html>
+

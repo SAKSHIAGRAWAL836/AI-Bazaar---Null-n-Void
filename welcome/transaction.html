@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction History | AI Monetization Simulator</title>
+    <style>
+        /* Base Styles (consistent with homepage) */
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --dark: #1e293b;
+            --darker: #0f172a;
+            --light: #f8fafc;
+            --gray: #94a3b8;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(to bottom right, var(--darker), var(--dark));
+            color: var(--light);
+            min-height: 100vh;
+        }
+        
+        /* Navigation (same as homepage) */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: bold;
+            font-size: 1.25rem;
+        }
+        
+        .logo-icon {
+            width: 2rem;
+            height: 2rem;
+            background-color: var(--primary);
+            border-radius: 50%;
+        }
+        
+        .nav-links {
+            display: none;
+            gap: 1.5rem;
+        }
+        
+        .nav-links a {
+            color: var(--light);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        
+        .login-btn {
+            background-color: var(--primary);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        
+        .login-btn:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .mobile-menu-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: block;
+        }
+        
+        /* Page Header */
+        .page-header {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 1.5rem;
+        }
+        
+        .page-header h1 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        
+        .page-header p {
+            color: var(--gray);
+            max-width: 600px;
+        }
+        
+        /* Filters */
+        .filters {
+            background-color: rgba(30, 41, 59, 0.8);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .filter-group label {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+        
+        .filter-group select, .filter-group input {
+            background-color: var(--darker);
+            border: 1px solid var(--dark);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            min-width: 180px;
+        }
+        
+        .reset-btn {
+            background: none;
+            border: 1px solid var(--gray);
+            color: var(--gray);
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            align-self: flex-end;
+            transition: all 0.3s;
+        }
+        
+        .reset-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        
+        /* Transaction Table */
+        .transactions-container {
+            max-width: 1200px;
+            margin: 0 auto 3rem;
+            padding: 0 1.5rem;
+            overflow-x: auto;
+        }
+        
+        .transactions-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: rgba(30, 41, 59, 0.8);
+            border-radius: 0.75rem;
+            overflow: hidden;
+        }
+        
+        .transactions-table th {
+            text-align: left;
+            padding: 1rem;
+            background-color: rgba(15, 23, 42, 0.8);
+            color: var(--gray);
+            font-weight: 500;
+        }
+        
+        .transactions-table td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+        }
+        
+        .transactions-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .transaction-type {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        .type-credit {
+            background-color: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+        
+        .type-debit {
+            background-color: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+        }
+        
+        .type-fee {
+            background-color: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
+        
+        .transaction-amount {
+            font-weight: bold;
+        }
+        
+        .transaction-model {
+            color: var(--primary);
+        }
+        
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+        }
+        
+        .pagination button {
+            background-color: rgba(30, 41, 59, 0.8);
+            border: none;
+            color: white;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .pagination button:hover {
+            background-color: var(--primary);
+        }
+        
+        .pagination button.active {
+            background-color: var(--primary);
+            font-weight: bold;
+        }
+        
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            color: var(--gray);
+        }
+        
+        /* Mobile Styles */
+        @media (max-width: 768px) {
+            .filters {
+                flex-direction: column;
+            }
+            
+            .reset-btn {
+                align-self: flex-start;
+            }
+            
+            .transactions-table {
+                font-size: 0.9rem;
+            }
+            
+            .transactions-table th, 
+            .transactions-table td {
+                padding: 0.75rem 0.5rem;
+            }
+        }
+        
+        @media (min-width: 768px) {
+            .nav-links {
+                display: flex;
+                align-items: center;
+            }
+            
+            .mobile-menu-btn {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">
+            <div class="logo-icon"></div>
+            <span>AI Monetization Simulator</span>
+        </div>
+        
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="/marketplace.html">Marketplace</a>
+            <a href="main.html">Dashboard</a>
+            <a href="transaction.html">Transaction History</a>
+            <a href="#" class="login-btn">Login</a>
+        </div>
+        
+        <button class="mobile-menu-btn">☰</button>
+    </nav>
+    
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1>Transaction History</h1>
+        <p>View all your token transactions, model usage, and platform fees in one place.</p>
+    </div>
+    
+    <!-- Filters -->
+    <div class="filters">
+        <div class="filter-group">
+            <label for="transaction-type">Transaction Type</label>
+            <select id="transaction-type">
+                <option value="all">All Types</option>
+                <option value="credit">Credits</option>
+                <option value="debit">Debits</option>
+                <option value="fee">Fees</option>
+            </select>
+        </div>
+        
+        <div class="filter-group">
+            <label for="date-range">Date Range</label>
+            <select id="date-range">
+                <option value="all">All Time</option>
+                <option value="week">Last 7 Days</option>
+                <option value="month">Last 30 Days</option>
+                <option value="quarter">Last 90 Days</option>
+                <option value="year">Last 12 Months</option>
+                <option value="custom">Custom Range</option>
+            </select>
+        </div>
+        
+        <div class="filter-group">
+            <label for="model-filter">AI Model</label>
+            <select id="model-filter">
+                <option value="all">All Models</option>
+                <option value="gpt-4">GPT-4 Text Generator</option>
+                <option value="stable-diffusion">Stable Diffusion</option>
+                <option value="whisper">Whisper ASR</option>
+                <option value="other">Other Models</option>
+            </select>
+        </div>
+        
+        <button class="reset-btn">Reset Filters</button>
+    </div>
+    
+    <!-- Transaction Table -->
+    <div class="transactions-container">
+        <table class="transactions-table">
+            <thead>
+                <tr>
+                    <th>Date & Time</th>
+                    <th>Transaction ID</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                    <th>Model</th>
+                    <th>Amount</th>
+                    <th>Balance</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>2023-11-15 14:30</td>
+                    <td>TXN-789456</td>
+                    <td><span class="transaction-type type-credit">Credit</span></td>
+                    <td>Token purchase</td>
+                    <td>-</td>
+                    <td class="transaction-amount" style="color: var(--success);">+1,000</td>
+                    <td>3,250</td>
+                </tr>
+                <tr>
+                    <td>2023-11-15 11:15</td>
+                    <td>TXN-789455</td>
+                    <td><span class="transaction-type type-debit">Debit</span></td>
+                    <td>Model usage</td>
+                    <td class="transaction-model">GPT-4 Text Generator</td>
+                    <td class="transaction-amount" style="color: var(--danger);">-50</td>
+                    <td>2,250</td>
+                </tr>
+                <tr>
+                    <td>2023-11-14 09:45</td>
+                    <td>TXN-789454</td>
+                    <td><span class="transaction-type type-fee">Fee</span></td>
+                    <td>Platform service fee</td>
+                    <td>-</td>
+                    <td class="transaction-amount" style="color: var(--warning);">-5</td>
+                    <td>2,300</td>
+                </tr>
+                <tr>
+                    <td>2023-11-14 09:45</td>
+                    <td>TXN-789453</td>
+                    <td><span class="transaction-type type-debit">Debit</span></td>
+                    <td>Model usage</td>
+                    <td class="transaction-model">Stable Diffusion</td>
+                    <td class="transaction-amount" style="color: var(--danger);">-30</td>
+                    <td>2,305</td>
+                </tr>
+                <tr>
+                    <td>2023-11-13 16:20</td>
+                    <td>TXN-789452</td>
+                    <td><span class="transaction-type type-credit">Credit</span></td>
+                    <td>Model earnings</td>
+                    <td class="transaction-model">GPT-4 Text Generator</td>
+                    <td class="transaction-amount" style="color: var(--success);">+200</td>
+                    <td>2,335</td>
+                </tr>
+                <tr>
+                    <td>2023-11-12 10:10</td>
+                    <td>TXN-789451</td>
+                    <td><span class="transaction-type type-debit">Debit</span></td>
+                    <td>Model usage</td>
+                    <td class="transaction-model">Whisper ASR</td>
+                    <td class="transaction-amount" style="color: var(--danger);">-25</td>
+                    <td>2,135</td>
+                </tr>
+                <tr>
+                    <td>2023-11-10 08:30</td>
+                    <td>TXN-789450</td>
+                    <td><span class="transaction-type type-credit">Credit</span></td>
+                    <td>Token purchase</td>
+                    <td>-</td>
+                    <td class="transaction-amount" style="color: var(--success);">+2,000</td>
+                    <td>2,160</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="pagination">
+            <button disabled>←</button>
+            <button class="active">1</button>
+            <button>2</button>
+            <button>3</button>
+            <button>→</button>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer>
+        <p>© 2023 Null n Void Team | MERN x AI Hackathon</p>
+    </footer>
+    
+    <script>
+        // Mobile Menu Toggle (same as homepage)
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const mobileMenu = document.querySelector('.mobile-menu');
+        const closeMenuBtn = document.querySelector('.close-menu');
+        const overlay = document.querySelector('.overlay');
+        
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', () => {
+                document.querySelector('.mobile-menu').classList.add('active');
+                document.querySelector('.overlay').classList.add('active');
+            });
+        }
+        
+        if (closeMenuBtn) {
+            closeMenuBtn.addEventListener('click', () => {
+                document.querySelector('.mobile-menu').classList.remove('active');
+                document.querySelector('.overlay').classList.remove('active');
+            });
+        }
+        
+        if (overlay) {
+            overlay.addEventListener('click', () => {
+                document.querySelector('.mobile-menu').classList.remove('active');
+                document.querySelector('.overlay').classList.remove('active');
+            });
+        }
+        
+        // Filter functionality
+        const transactionTypeFilter = document.getElementById('transaction-type');
+        const dateRangeFilter = document.getElementById('date-range');
+        const modelFilter = document.getElementById('model-filter');
+        const resetBtn = document.querySelector('.reset-btn');
+        const transactionRows = document.querySelectorAll('.transactions-table tbody tr');
+        
+        function filterTransactions() {
+            const typeValue = transactionTypeFilter.value;
+            const dateValue = dateRangeFilter.value;
+            const modelValue = modelFilter.value;
+            
+            transactionRows.forEach(row => {
+                const type = row.querySelector('.transaction-type').classList.contains('type-credit') ? 'credit' : 
+                             row.querySelector('.transaction-type').classList.contains('type-debit') ? 'debit' : 'fee';
+                const model = row.querySelector('.transaction-model')?.textContent || '-';
+                
+                const typeMatch = typeValue === 'all' || type === typeValue;
+                const modelMatch = modelValue === 'all' || 
+                                 (modelValue === 'other' && !['GPT-4 Text Generator', 'Stable Diffusion', 'Whisper ASR'].includes(model)) ||
+                                 model.includes(modelValue.replace('-', ' '));
+                
+                // Date filtering would be more complex in a real app
+                const dateMatch = true; // Simplified for this demo
+                
+                if (typeMatch && modelMatch && dateMatch) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+        
+        if (transactionTypeFilter && dateRangeFilter && modelFilter) {
+            transactionTypeFilter.addEventListener('change', filterTransactions);
+            dateRangeFilter.addEventListener('change', filterTransactions);
+            modelFilter.addEventListener('change', filterTransactions);
+        }
+        
+        if (resetBtn) {
+            resetBtn.addEventListener('click', () => {
+                transactionTypeFilter.value = 'all';
+                dateRangeFilter.value = 'all';
+                modelFilter.value = 'all';
+                filterTransactions();
+            });
+        }
+        
+        // Pagination buttons
+        const paginationButtons = document.querySelectorAll('.pagination button:not([disabled])');
+        paginationButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                document.querySelector('.pagination button.active').classList.remove('active');
+                button.classList.add('active');
+                // In a real app, this would load the corresponding page of results
+            });
+        });
+        
+        // Simulate login button click
+        const loginButtons = document.querySelectorAll('.login-btn');
+        loginButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                alert('Login functionality would be implemented here. Redirecting to login page in a real application.');
+            });
+        });
+    </script>
+</body>
+</html>

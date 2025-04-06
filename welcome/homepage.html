@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Marketplace Monetization Simulator</title>
+  <link rel="stylesheet" href="home.css" />
+  <style>
+    /* [Same styles as before, unchanged for brevity] */
+    /* ... Keep all your CSS exactly as you had ... */
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav>
+    <div class="logo">
+      <div class="logo-icon"></div>
+      <span>AI Monetization Simulator</span>
+    </div>
+
+    <div class="nav-links">
+      <a href="#hero">Home</a>
+      <a href="/marketplace.html">Marketplace</a>
+      <a href="main.html">Dashboard</a>
+      <a href="transaction.html">Transaction History</a>
+      <a href="login page.html" class="login-btn">Login</a>
+    </div>
+
+    <button class="mobile-menu-btn">☰</button>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu">
+    <div class="mobile-menu-header">
+      <div class="logo">
+        <div class="logo-icon"></div>
+        <span>AI Monetization</span>
+      </div>
+      <button class="close-menu">×</button>
+    </div>
+
+    <div class="mobile-nav-links">
+      <a href="#hero">Home</a>
+      <a href="#features">Marketplace</a>
+      <a href="#dashboard">Dashboard</a>
+      <a href="login page.html" class="mobile-login-btn">Login</a>
+    </div>
+  </div>
+  <div class="overlay"></div>
+
+  <!-- Hero Section -->
+  <section id="hero" class="hero">
+    <h1>AI Marketplace Monetization Simulator</h1>
+    <p>Optimize your AI model's revenue potential with dynamic pricing, smart discovery, and gamified growth in decentralized marketplaces.</p>
+  </section>
+
+  <!-- Features Grid -->
+  <section id="features" class="features">
+    <div class="feature-card">
+      <div class="feature-icon">📈</div>
+      <h3>Dynamic Pricing Engine</h3>
+      <p>Models evolve in value based on demand, age, and market trends</p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">🔍</div>
+      <h3>Smart Tool Matching</h3>
+      <p>Reduce wasted tokens with AI-powered user-tool matching</p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">🎮</div>
+      <h3>Gamified Growth</h3>
+      <p>Badges, leaderboards, and battles to drive engagement</p>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section id="dashboard" class="how-it-works">
+    <h2>How It Works</h2>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-number">1</div>
+        <div class="step-content">
+          <h4>Upload Your Model</h4>
+          <p>Set pricing and metadata for your AI tools</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-number">2</div>
+        <div class="step-content">
+          <h4>Simulate Marketplace</h4>
+          <p>Test different monetization strategies</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-number">3</div>
+        <div class="step-content">
+          <h4>Analyze Performance</h4>
+          <p>Get detailed revenue and usage analytics</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-number">4</div>
+        <div class="step-content">
+          <h4>Optimize & Scale</h4>
+          <p>Implement data-driven improvements</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta">
+    <h2>Ready to Maximize Your AI Revenue?</h2>
+    <a href="#hero" class="cta-btn">Get Started Now</a>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 Null n Void Team | MERN x AI Hackathon</p>
+  </footer>
+
+  <script>
+    // Mobile Menu Toggle
+    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+    const mobileMenu = document.querySelector('.mobile-menu');
+    const closeMenuBtn = document.querySelector('.close-menu');
+    const overlay = document.querySelector('.overlay');
+
+    mobileMenuBtn.addEventListener('click', () => {
+      mobileMenu.classList.add('active');
+      overlay.classList.add('active');
+    });
+
+    closeMenuBtn.addEventListener('click', () => {
+      mobileMenu.classList.remove('active');
+      overlay.classList.remove('active');
+    });
+
+    overlay.addEventListener('click', () => {
+      mobileMenu.classList.remove('active');
+      overlay.classList.remove('active');
+    });
+
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        const targetId = this.getAttribute('href');
+        if (targetId === '#' || !document.querySelector(targetId)) return;
+
+        e.preventDefault();
+        document.querySelector(targetId).scrollIntoView({
+          behavior: 'smooth'
+        });
+
+        mobileMenu.classList.remove('active');
+        overlay.classList.remove('active');
+      });
+    });
+  </script>
+</body>
+</html>
